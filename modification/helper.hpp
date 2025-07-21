@@ -6,7 +6,7 @@
 
 #include "game.hpp"
 
-namespace Nampower {
+namespace AndrgitWoWMod {
 
     bool SpellIsOnGcd(const game::SpellRec *spell);
 

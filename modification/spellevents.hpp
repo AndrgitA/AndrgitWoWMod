@@ -6,7 +6,7 @@
 
 #include "main.hpp"
 
-namespace Nampower {
+namespace AndrgitWoWMod {
 
     void SignalEventHook(hadesmem::PatchDetourBase *detour, game::Events eventId);
 

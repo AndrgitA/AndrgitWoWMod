@@ -9,7 +9,7 @@
 #include <cstdint>
 #include <logging.hpp>
 
-namespace Nampower {
+namespace AndrgitWoWMod {
 
     class CDataStore {
     public:

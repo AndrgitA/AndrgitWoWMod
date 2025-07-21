@@ -8,7 +8,7 @@
 #include "spellcast.hpp"
 #include "helper.hpp"
 
-namespace Nampower {
+namespace AndrgitWoWMod {
     uint32_t lastCastResultTimeMs;
 
     void SignalEventHook(hadesmem::PatchDetourBase *detour, game::Events eventId) {

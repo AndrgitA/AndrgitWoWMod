@@ -7,7 +7,7 @@
 #include <Windows.h>
 #include "main.hpp"
 
-namespace Nampower {
+namespace AndrgitWoWMod {
     uint32_t Script_CastSpellByNameNoQueue(hadesmem::PatchDetourBase *detour, uintptr_t *luaState);
 
     uint32_t Script_QueueSpellByName(hadesmem::PatchDetourBase *detour, uintptr_t *luaState);

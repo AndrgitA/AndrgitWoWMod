@@ -48,7 +48,7 @@
 
 BOOL WINAPI DllMain(HINSTANCE, uint32_t, void *);
 
-namespace Nampower {
+namespace AndrgitWoWMod {
     uint32_t gLastErrorTimeMs;
     uint32_t gLastBufferIncreaseTimeMs;
     uint32_t gLastBufferDecreaseTimeMs;
@@ -629,15 +629,15 @@ namespace Nampower {
                 std::chrono::high_resolution_clock::now().time_since_epoch()).count());
 
         // remove/rename previous logs
-        remove("nampower_debug.log.3");
-        rename("nampower_debug.log.2", "nampower_debug.log.3");
-        rename("nampower_debug.log.1", "nampower_debug.log.2");
-        rename("nampower_debug.log", "nampower_debug.log.1");
+        remove("AndrgitWoWMod_debug.log.3");
+        rename("AndrgitWoWMod_debug.log.2", "AndrgitWoWMod_debug.log.3");
+        rename("AndrgitWoWMod_debug.log.1", "AndrgitWoWMod_debug.log.2");
+        rename("AndrgitWoWMod_debug.log", "AndrgitWoWMod_debug.log.1");
 
         // open new log file
-        debugLogFile.open("nampower_debug.log");
+        debugLogFile.open("AndrgitWoWMod_debug.log");
 
-        DEBUG_LOG("Loading nampower v" << MAJOR_VERSION << "." << MINOR_VERSION << "." << PATCH_VERSION);
+        DEBUG_LOG("Loading AndrgitWoWMod v" << MAJOR_VERSION << "." << MINOR_VERSION << "." << PATCH_VERSION);
 
         // default values
         gUserSettings.queueCastTimeSpells = true;
@@ -1114,6 +1114,6 @@ namespace Nampower {
 }
 
 extern "C" __declspec(dllexport) uint32_t Load() {
-    Nampower::load();
+    AndrgitWoWMod::load();
     return EXIT_SUCCESS;
 }

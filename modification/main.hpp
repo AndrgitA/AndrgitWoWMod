@@ -23,7 +23,7 @@
 #include "castqueue.h"
 #include "cdatastore.hpp"
 
-namespace Nampower {
+namespace AndrgitWoWMod {
     constexpr uint32_t MAX_TIME_SINCE_LAST_CAST_FOR_QUEUE = 10000; // time limit in ms after which queued casts are ignored in errors
     constexpr uint32_t DYNAMIC_BUFFER_INCREMENT = 5; // amount to adjust buffer in ms on errors/lack of errors
     constexpr uint32_t BUFFER_INCREASE_FREQUENCY = 5000; // time in ms between changes to raise buffer

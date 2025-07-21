@@ -7,7 +7,7 @@
 #include "offsets.hpp"
 #include "logging.hpp"
 
-namespace Nampower {
+namespace AndrgitWoWMod {
     auto const APPLY_BUFFER_TO_GCD = true;  // only necessary until turtle fixes the gcd issue again
 
     uint32_t GetChannelBaseDuration(const game::SpellRec *spell) {

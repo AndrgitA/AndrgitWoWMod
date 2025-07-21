@@ -7,7 +7,7 @@
 #include "logging.hpp"
 #include "offsets.hpp"
 
-namespace Nampower {
+namespace AndrgitWoWMod {
     int SpellChannelStartHandlerHook(hadesmem::PatchDetourBase *detour, uint32_t *opCode, CDataStore *packet) {
         auto const rpos = packet->m_read;
 

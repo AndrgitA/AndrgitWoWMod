@@ -1,4 +1,4 @@
-set(DLL_NAME nampower)
+set(DLL_NAME AndrgitWoWMod)
 
 include_directories(Include ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR})
 

@@ -8,7 +8,7 @@
 #include <chrono>
 #include <string>
 
-namespace Nampower {
+namespace AndrgitWoWMod {
     extern std::ofstream debugLogFile;
 
     extern uint32_t gStartTime;
@@ -20,7 +20,7 @@ namespace Nampower {
 
 // TODO uncomment once ready for release
 //#ifdef _DEBUG
-//std::ofstream debugLogFile("nampower_debug.log");
+//std::ofstream debugLogFile("AndrgitWoWMod_debug.log");
 //#define DEBUG_LOG(msg) debugLogFile << "[DEBUG]" << GetTime() << ": " << msg << std::endl
 //#else
 //#define DEBUG_LOG(msg) // No-op in release mode

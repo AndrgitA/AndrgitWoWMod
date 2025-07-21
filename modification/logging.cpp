@@ -1,7 +1,7 @@
 
 #include <logging.hpp>
 
-namespace Nampower {
+namespace AndrgitWoWMod {
     std::ofstream debugLogFile;
     uint32_t gStartTime;
 }

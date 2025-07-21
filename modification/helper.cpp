@@ -6,7 +6,7 @@
 #include "offsets.hpp"
 #include "main.hpp"
 
-namespace Nampower {
+namespace AndrgitWoWMod {
     bool SpellIsOnGcd(const game::SpellRec *spell) {
         if (spell->Id == 51714) {
             // power overwhelming gcd removed but client not updated

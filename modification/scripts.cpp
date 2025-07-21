@@ -5,7 +5,7 @@
 #include "scripts.hpp"
 #include "offsets.hpp"
 
-namespace Nampower {
+namespace AndrgitWoWMod {
     auto const lua_error = reinterpret_cast<lua_errorT>(Offsets::lua_error);
 
     auto const lua_isstring = reinterpret_cast<lua_isstringT>(Offsets::lua_isstring);

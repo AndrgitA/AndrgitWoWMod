@@ -3,7 +3,7 @@
 #include <memory.h>
 #include <cstring>
 
-namespace Nampower {
+namespace AndrgitWoWMod {
 
     void CDataStore::InternalInitialize(unsigned char *&data, unsigned int &base, unsigned int &alloc) {
     }

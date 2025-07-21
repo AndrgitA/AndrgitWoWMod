@@ -8,7 +8,7 @@
 #include <Windows.h>
 #include "main.hpp"
 
-namespace Nampower {
+namespace AndrgitWoWMod {
     void CastQueuedNonGcdSpell();
 
     void CastQueuedNormalSpell();

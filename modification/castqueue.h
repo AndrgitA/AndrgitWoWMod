@@ -4,7 +4,7 @@
 #include "logging.hpp"
 #include <vector>
 
-namespace Nampower {
+namespace AndrgitWoWMod {
     class CastQueue {
     private:
         int maxSize;
