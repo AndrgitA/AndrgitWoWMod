@@ -8,12 +8,23 @@ foreach(policy
     endif()
 endforeach()
 
+
+# Vars
+set(PROJECT_NAME "AndrgitWoWMod")
+
+# LOCAL PATH
+# BOOST
+set(BOOST_FOLDER "C:/Utils/software/boost_1_80_0/boost_1_80_0-msvc-14.3-32/boost")
+set(BOOST_FOLDER_INCLUDE "C:/Utils/software/boost_1_80_0/boost_1_80_0-msvc-14.3-32")
+set(BOOST_FOLDER_LIBRARY "C:/Utils/software/boost_1_80_0/boost_1_80_0-msvc-14.3-32/lib32-msvc-14.3")
+#HADESMEM
+set(HADESMEM_FOLDER_DEBUG "C:/Utils/software/hadesmem/hadesmem-v143-Debug-Win32")
+set(HADESMEM_FOLDER_RELEASE "C:/Utils/software/hadesmem/hadesmem-v143-Release-Win32")
+
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
-
-set(PROJECT_NAME nampower)
 
 project(${PROJECT_NAME})
 
@@ -21,9 +32,9 @@ project(${PROJECT_NAME})
 if( NOT CMAKE_BUILD_TYPE )
     set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif()
-set(BOOST_ROOT "C:/software/boost_1_80_0/boost")
-set(BOOST_INCLUDEDIR "C:/software/boost_1_80_0")
-set(BOOST_LIBRARYDIR "C:/software/boost_1_80_0/lib32-msvc-14.3")
+set(BOOST_ROOT ${BOOST_FOLDER})
+set(BOOST_INCLUDEDIR ${BOOST_FOLDER_INCLUDE})
+set(BOOST_LIBRARYDIR ${BOOST_FOLDER_LIBRARY})
 set (Boost_DETAILED_FAILURE_MSG ON)
 set (Boost_DEBUG ON)
 
@@ -32,7 +43,6 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
 find_package(Boost REQUIRED COMPONENTS filesystem program_options)
-
 if (Boost_FOUND)
     message(STATUS "boost found at ${Boost_INCLUDE_DIR}.  Library dir: ${Boost_LIBRARY_DIR_DEBUG}")
 else()
@@ -40,17 +50,17 @@ else()
 endif()
 
 if ("x_${CMAKE_BUILD_TYPE}" STREQUAL "x_Debug")
-    set(HADESMEM_ROOT "C:/software/hadesmem-v142-Debug-Win32")
+    set(HADESMEM_ROOT ${HADESMEM_FOLDER_DEBUG})
     set(HADESMEM_BUILD "Debug")
     link_directories("${Boost_LIBRARY_DIR_DEBUG}")
 else()
-    set(HADESMEM_ROOT "C:/software/hadesmem-v142-Release-Win32")
+    set(HADESMEM_ROOT ${HADESMEM_FOLDER_RELEASE})
     set(HADESMEM_BUILD "Release")
     link_directories("${Boost_LIBRARY_DIR_RELEASE}")
 endif()
 
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    message(FATAL_ERROR "64-bit unsupported.  nampower integrates with the 1.12.1 client which is only 32 bit")
+    message(FATAL_ERROR "64-bit unsupported. ${PROJECT_NAME} integrates with the 1.12.1 client which is only 32 bit")
 else()
     set(HADESMEM_ARCH "Win32")
 endif()
@@ -96,8 +106,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:MSVCRT /NODEFAULTLIB:MSVCRTD")
 
 # Link static libraries
-add_subdirectory(loader)
-add_subdirectory(nampower)
+#add_subdirectory(loader)
+add_subdirectory(modification)
 
 install(FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt"
