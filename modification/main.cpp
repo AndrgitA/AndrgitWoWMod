@@ -42,6 +42,8 @@
 
 #include <chrono>
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 
 
 BOOL WINAPI DllMain(HINSTANCE, uint32_t, void *);
@@ -126,6 +128,20 @@ namespace AndrgitWoWMod {
     uint32_t GetTime() {
         return static_cast<uint32_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::high_resolution_clock::now().time_since_epoch()).count()) - gStartTime;
+    }
+
+    std::string GetHumanReadableTime() {
+        auto now = std::chrono::system_clock::now();
+        auto in_time_t = std::chrono::system_clock::to_time_t(now);
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+
+        std::tm buf;
+        localtime_s(&buf, &in_time_t);
+
+        std::stringstream ss;
+        ss << std::put_time(&buf, "%Y-%m-%d %X");
+        ss << '.' << std::setfill('0') << std::setw(3) << ms.count();
+        return ss.str();
     }
 
     void RegisterLuaFunction(char* name, uintptr_t* func) {
@@ -640,14 +656,19 @@ namespace AndrgitWoWMod {
         //*strPtr = reinterpret_cast<uintptr_t>(SPELL_DAMAGE_EVENT_OTHER);
     }
 
+    // Template function to simplify hook initialization with specific storage
+    template<typename FuncT, typename HookT>
+    std::unique_ptr<hadesmem::PatchDetour<FuncT>> createHook(const hadesmem::Process& process, Offsets offset, HookT hookFunc) {
+        auto const originalFunc = hadesmem::detail::AliasCast<FuncT>(offset);
+        auto detour = std::make_unique<hadesmem::PatchDetour<FuncT>>(process, originalFunc, hookFunc);
+        detour->Apply();
+        return detour;
+    }
+
     void initHooks() {
         const hadesmem::Process process(::GetCurrentProcessId());
 
         //initCustomEvents();
-
-        auto const setCVarOrig = hadesmem::detail::AliasCast<SetCVarT>(Offsets::Script_SetCVar);
-        gSetCVarDetour = std::make_unique<hadesmem::PatchDetour<SetCVarT >>(process, setCVarOrig, &Script_SetCVarHook);
-        gSetCVarDetour->Apply();
 
         //// activate spellbar and our own internal cooldown on a successful cast attempt (result from server not available yet)
         //auto const spell_C_CastSpellOrig = hadesmem::detail::AliasCast<CastSpellT>(Offsets::Spell_C_CastSpell);
@@ -741,13 +762,6 @@ namespace AndrgitWoWMod {
         //    LuaScriptT >>(process, spellStopCastingOrig, &Script_SpellStopCastingHook);
         //gSpellStopCastingDetour->Apply();
 
-        auto const spell_C_TargetSpellOrig = hadesmem::detail::AliasCast<Spell_C_TargetSpellT>(
-            Offsets::Spell_C_TargetSpell);
-        gSpell_C_TargetSpellDetour = std::make_unique<hadesmem::PatchDetour<Spell_C_TargetSpellT >>(process,
-            spell_C_TargetSpellOrig,
-            &Spell_C_TargetSpellHook);
-        gSpell_C_TargetSpellDetour->Apply();
-
         ////        auto const signalEventOrig = hadesmem::detail::AliasCast<SignalEventT>(Offsets::SignalEvent);
         ////        gSignalEventDetour = std::make_unique<hadesmem::PatchDetour<SignalEventT >>(process, signalEventOrig,
         ////                                                                                    &SignalEventHook);
@@ -769,11 +783,6 @@ namespace AndrgitWoWMod {
         //qQueueScriptDetour = std::make_unique<hadesmem::PatchDetour<LuaScriptT >>(process, queueScriptOrig,
         //    Script_QueueScript);
         //qQueueScriptDetour->Apply();
-
-        auto const isSpellInRangeOrig = hadesmem::detail::AliasCast<LuaScriptT>(Offsets::Script_IsSpellInRange);
-        gIsSpellInRangeDetour = std::make_unique<hadesmem::PatchDetour<LuaScriptT >>(process, isSpellInRangeOrig,
-            Script_IsSpellInRange);
-        gIsSpellInRangeDetour->Apply();
 
         //auto const isSpellUsableOrig = hadesmem::detail::AliasCast<LuaScriptT>(Offsets::Script_IsSpellUsable);
         //gIsSpellUsableDetour = std::make_unique<hadesmem::PatchDetour<LuaScriptT >>(process,
@@ -823,13 +832,6 @@ namespace AndrgitWoWMod {
         //    Script_ChannelStopCastingNextTick);
         //gChannelStopCastingNextTickDetour->Apply();
 
-        auto const gGetAndrgitWoWModVersionOrig = hadesmem::detail::AliasCast<LuaScriptT>(
-            Offsets::Script_GetAndrgitWoWModVersion);
-        gGetAndrgitWoWModVersionDetour = std::make_unique<hadesmem::PatchDetour<LuaScriptT >>(process,
-            gGetAndrgitWoWModVersionOrig,
-            Script_GetAndrgitWoWModVersion);
-        gGetAndrgitWoWModVersionDetour->Apply();
-
         //auto const gGetItemLevelOrig = hadesmem::detail::AliasCast<LuaScriptT>(
         //    Offsets::Script_GetItemLevel);
         //gGetItemLevelDetour = std::make_unique<hadesmem::PatchDetour<LuaScriptT >>(process,
@@ -861,6 +863,38 @@ namespace AndrgitWoWMod {
         //gIEndSceneDetour = std::make_unique<hadesmem::PatchDetour<ISceneEndT >>(
         //    process, iEndSceneOrig, &ISceneEndHook);
         //gIEndSceneDetour->Apply();
+
+
+        gSetCVarDetour = createHook<SetCVarT>(process, Offsets::Script_SetCVar, &Script_SetCVarHook);
+        //gCastDetour = createHook<CastSpellT>(process, Offsets::Spell_C_CastSpell, &Spell_C_CastSpellHook);
+        //gSendCastDetour = createHook<SendCastT>(process, Offsets::SendCast, &SendCastHook);
+        //gCancelSpellDetour = createHook<CancelSpellT>(process, Offsets::CancelSpell, &CancelSpellHook);
+        //gCastResultHandlerDetour = createHook<PacketHandlerT>(process, Offsets::CastResultHandler, &CastResultHandlerHook);
+        //gSpellStartHandlerDetour = createHook<FastCallPacketHandlerT>(process, Offsets::SpellStartHandler, &SpellStartHandlerHook);
+        //gPeriodicAuraLogHandlerDetour = createHook<FastCallPacketHandlerT>(process, Offsets::PeriodicAuraLogHandler, &PeriodicAuraLogHandlerHook);
+        //gSpellNonMeleeDmgLogHandlerDetour = createHook<FastCallPacketHandlerT>(process, Offsets::SpellNonMeleeDmgLogHandler, &SpellNonMeleeDmgLogHandlerHook);
+        //gSpellChannelStartHandlerDetour = createHook<PacketHandlerT>(process, Offsets::SpellChannelStartHandler, &SpellChannelStartHandlerHook);
+        //gSpellChannelUpdateHandlerDetour = createHook<PacketHandlerT>(process, Offsets::SpellChannelUpdateHandler, &SpellChannelUpdateHandlerHook);
+        //gSpellFailedDetour = createHook<Spell_C_SpellFailedT>(process, Offsets::Spell_C_SpellFailed, &Spell_C_SpellFailedHook);
+        //gSpellGoDetour = createHook<SpellGoT>(process, Offsets::SpellGo, &SpellGoHook);
+        //gSpellDelayedDetour = createHook<PacketHandlerT>(process, Offsets::SpellDelayed, &SpellDelayedHook);
+        //gSpellTargetUnitDetour = createHook<LuaScriptT>(process, Offsets::Script_SpellTargetUnit, &Script_SpellTargetUnitHook);
+        //gSpellStopCastingDetour = createHook<LuaScriptT>(process, Offsets::Script_SpellStopCasting, &Script_SpellStopCastingHook);
+        gSpell_C_TargetSpellDetour = createHook<Spell_C_TargetSpellT>(process, Offsets::Spell_C_TargetSpell, &Spell_C_TargetSpellHook);
+        //gCastSpellByNameNoQueueDetour = createHook<LuaScriptT>(process, Offsets::Script_CastSpellByNameNoQueue, Script_CastSpellByNameNoQueue);
+        //gQueueSpellByNameDetour = createHook<LuaScriptT>(process, Offsets::Script_QueueSpellByName, Script_QueueSpellByName);
+        //qQueueScriptDetour = createHook<LuaScriptT>(process, Offsets::Script_QueueScript, Script_QueueScript);
+        gIsSpellInRangeDetour = createHook<LuaScriptT>(process, Offsets::Script_IsSpellInRange, Script_IsSpellInRange);
+        //gIsSpellUsableDetour = createHook<LuaScriptT>(process, Offsets::Script_IsSpellUsable, Script_IsSpellUsable);
+        //gGetCurrentCastingInfoDetour = createHook<LuaScriptT>(process, Offsets::Script_GetCurrentCastingInfo, Script_GetCurrentCastingInfo);
+        //gGetSpellIdForNameDetour = createHook<LuaScriptT>(process, Offsets::Script_GetSpellIdForName, Script_GetSpellIdForName);
+        //gGetSpellNameAndRankForIdDetour = createHook<LuaScriptT>(process, Offsets::Script_GetSpellNameAndRankForId, Script_GetSpellNameAndRankForId);
+        //gGetSpellSlotAndTypeForNameDetour = createHook<LuaScriptT>(process, Offsets::Script_GetSpellSlotTypeIdForName, Script_GetSpellSlotTypeIdForName);
+        //gOnSpriteRightClickDetour = createHook<OnSpriteRightClickT>(process, Offsets::OnSpriteRightClick, OnSpriteRightClickHook);
+        //gChannelStopCastingNextTickDetour = createHook<LuaScriptT>(process, Offsets::Script_ChannelStopCastingNextTick, Script_ChannelStopCastingNextTick);
+        gGetAndrgitWoWModVersionDetour = createHook<LuaScriptT>(process, Offsets::Script_GetAndrgitWoWModVersion, Script_GetAndrgitWoWModVersion);
+        //gGetItemLevelDetour = createHook<LuaScriptT>(process, Offsets::Script_GetItemLevel, Script_GetItemLevel);
+        //gIEndSceneDetour = createHook<ISceneEndT>(process, Offsets::ISceneEndPtr, &ISceneEndHook);
     }
 
     void SpellVisualsInitializeHook(hadesmem::PatchDetourBase* detour) {
