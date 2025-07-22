@@ -10,7 +10,7 @@ endforeach()
 
 
 # Vars
-set(PROJECT_NAME "AndrgitWoWMod")
+set(PROJECT_NAME AndrgitWoWMod)
 
 # LOCAL PATH
 # BOOST

@@ -9,7 +9,7 @@
 #include "main.hpp"
 
 namespace AndrgitWoWMod {
-    void CastQueuedNonGcdSpell();
+    /*void CastQueuedNonGcdSpell();
 
     void CastQueuedNormalSpell();
 
@@ -26,11 +26,11 @@ namespace AndrgitWoWMod {
     void SpellGoHook(hadesmem::PatchDetourBase *detour, uint64_t *casterGUID, uint64_t *targetGUID, uint32_t spellId,
                      CDataStore *spellData);
 
-    bool Spell_C_TargetSpellHook(hadesmem::PatchDetourBase *detour,
-                                 uint32_t *player,
-                                 uint32_t *spellId,
-                                 uint32_t unk3,
-                                 float unk4);
+    void SendCastHook(hadesmem::PatchDetourBase *detour, game::SpellCast *cast, char unk);*/
 
-    void SendCastHook(hadesmem::PatchDetourBase *detour, game::SpellCast *cast, char unk);
+    bool Spell_C_TargetSpellHook(hadesmem::PatchDetourBase* detour,
+        uint32_t* player,
+        uint32_t* spellId,
+        uint32_t unk3,
+        float unk4);
 }

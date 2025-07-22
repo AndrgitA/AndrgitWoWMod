@@ -8,7 +8,8 @@
 #include <cstdint>
 
 struct UserSettings {
-    bool queueCastTimeSpells;
+    bool quickcastTargetingSpells;
+    /*bool queueCastTimeSpells;
     bool queueInstantSpells;
     bool queueOnSwingSpells;
     bool queueChannelingSpells;
@@ -35,7 +36,7 @@ struct UserSettings {
     uint32_t maxBufferIncreaseMs;
     uint32_t nonGcdBufferTimeMs;
 
-    int32_t channelLatencyReductionPercentage;
+    int32_t channelLatencyReductionPercentage;*/
 };
 
 enum CastType {

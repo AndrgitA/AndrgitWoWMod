@@ -8,7 +8,7 @@
 
 namespace AndrgitWoWMod {
 
-    bool SpellIsOnGcd(const game::SpellRec *spell);
+    /*bool SpellIsOnGcd(const game::SpellRec *spell);
 
     bool SpellIsChanneling(const game::SpellRec *spell);
 
@@ -27,6 +27,8 @@ namespace AndrgitWoWMod {
     bool IsSpellOnCooldown(uint32_t spellId);
 
     char *ConvertGuidToString(uint64_t guid);
+
+    */
 
     float GetNameplateDistance();
 

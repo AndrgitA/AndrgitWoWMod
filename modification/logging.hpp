@@ -6,14 +6,12 @@
 
 #include <fstream>
 #include <chrono>
-#include <string>
 
 namespace AndrgitWoWMod {
     extern std::ofstream debugLogFile;
 
     extern uint32_t gStartTime;
     extern uint32_t GetTime();
-    extern std::string GetHumanReadableTime();
 
 #ifndef DEBUG_LOG_H
 #define DEBUG_LOG_H
@@ -26,7 +24,7 @@ namespace AndrgitWoWMod {
 //#define DEBUG_LOG(msg) // No-op in release mode
 //#endif
 
-#define DEBUG_LOG(msg) debugLogFile << "[DEBUG]" << GetHumanReadableTime() << ": " << msg << std::endl
+#define DEBUG_LOG(msg) debugLogFile << "[DEBUG]" << GetTime() << ": " << msg << std::endl
 #define DEBUG_LOG2(msg) debugLogFile << msg
 
 #endif  // DEBUG_LOG_H

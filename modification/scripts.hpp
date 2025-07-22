@@ -8,11 +8,9 @@
 #include "main.hpp"
 
 namespace AndrgitWoWMod {
-    uint32_t Script_CastSpellByNameNoQueue(hadesmem::PatchDetourBase *detour, uintptr_t *luaState);
+    /*uint32_t Script_CastSpellByNameNoQueue(hadesmem::PatchDetourBase *detour, uintptr_t *luaState);
 
     uint32_t Script_QueueSpellByName(hadesmem::PatchDetourBase *detour, uintptr_t *luaState);
-
-    uint32_t Script_IsSpellInRange(hadesmem::PatchDetourBase *detour, uintptr_t *luaState);
 
     uint32_t Script_IsSpellUsable(hadesmem::PatchDetourBase *detour, uintptr_t *luaState);
 
@@ -34,5 +32,9 @@ namespace AndrgitWoWMod {
 
     bool Script_QueueScript(hadesmem::PatchDetourBase *detour, uintptr_t *luaState);
 
-    bool RunQueuedScript(int priority);
+    bool RunQueuedScript(int priority);*/
+
+    uint32_t Script_IsSpellInRange(hadesmem::PatchDetourBase* detour, uintptr_t* luaState);
+
+    uint32_t Script_GetAndrgitWoWModVersion(hadesmem::PatchDetourBase* detour, uintptr_t* luaState);
 }
