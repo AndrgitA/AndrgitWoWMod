@@ -15,7 +15,7 @@ namespace AndrgitWoWMod {
     auto const lua_tonumber = reinterpret_cast<lua_tonumberT>(Offsets::lua_tonumber);
 
     auto const lua_pushnumber = reinterpret_cast<lua_pushnumberT>(Offsets::lua_pushnumber);
-    //auto const lua_pushstring = reinterpret_cast<lua_pushstringT>(Offsets::lua_pushstring);
+    auto const lua_pushstring = reinterpret_cast<lua_pushstringT>(Offsets::lua_pushstring);
 
     //bool gScriptQueued;
     //int gScriptPriority = 1;
@@ -151,59 +151,59 @@ namespace AndrgitWoWMod {
         return 0;
     }
 
-    //uint32_t Script_IsSpellUsable(hadesmem::PatchDetourBase *detour, uintptr_t *luaState) {
-    //    auto param1IsString = lua_isstring(luaState, 1);
-    //    auto param1IsNumber = lua_isnumber(luaState, 1);
-    //    if (param1IsString || param1IsNumber) {
-    //        uint32_t spellId = 0;
+    uint32_t Script_IsSpellUsable(hadesmem::PatchDetourBase *detour, uintptr_t *luaState) {
+        auto param1IsString = lua_isstring(luaState, 1);
+        auto param1IsNumber = lua_isnumber(luaState, 1);
+        if (param1IsString || param1IsNumber) {
+            uint32_t spellId = 0;
 
-    //        if (param1IsNumber) {
-    //            spellId = uint32_t(lua_tonumber(luaState, 1));
+            if (param1IsNumber) {
+                spellId = uint32_t(lua_tonumber(luaState, 1));
 
-    //            if (spellId == 0) {
-    //                lua_error(luaState, "Unable to parse spell id");
-    //                return 0;
-    //            }
-    //        } else {
-    //            auto const spellName = lua_tostring(luaState, 1);
+                if (spellId == 0) {
+                    lua_error(luaState, "Unable to parse spell id");
+                    return 0;
+                }
+            } else {
+                auto const spellName = lua_tostring(luaState, 1);
 
-    //            spellId = GetSpellIdFromSpellName(spellName);
-    //            if (spellId == 0) {
-    //                lua_error(luaState,
-    //                          "Unable to determine spell id from spell name, possibly because it isn't in your spell book.  Try IsSpellUsable(SPELL_ID) instead");
-    //                return 0;
-    //            }
-    //        }
+                spellId = GetSpellIdFromSpellName(spellName);
+                if (spellId == 0) {
+                    lua_error(luaState,
+                              "Unable to determine spell id from spell name, possibly because it isn't in your spell book.  Try IsSpellUsable(SPELL_ID) instead");
+                    return 0;
+                }
+            }
 
-    //        auto spell = game::GetSpellInfo(spellId);
-    //        if (spell) {
-    //            auto const IsSpellUsable = reinterpret_cast<Spell_C_IsSpellUsableT>(Offsets::Spell_C_IsSpellUsable);
+            auto spell = game::GetSpellInfo(spellId);
+            if (spell) {
+                auto const IsSpellUsable = reinterpret_cast<Spell_C_IsSpellUsableT>(Offsets::Spell_C_IsSpellUsable);
 
-    //            uint32_t outOfMana = 0;
-    //            auto const result = IsSpellUsable(spell, &outOfMana) & 0xFF;
+                uint32_t outOfMana = 0;
+                auto const result = IsSpellUsable(spell, &outOfMana) & 0xFF;
 
-    //            if (result != 0) {
-    //                lua_pushnumber(luaState, 1.0);
-    //            } else {
-    //                lua_pushnumber(luaState, 0);
-    //            }
+                if (result != 0) {
+                    lua_pushnumber(luaState, 1.0);
+                } else {
+                    lua_pushnumber(luaState, 0);
+                }
 
-    //            if (outOfMana) {
-    //                lua_pushnumber(luaState, 1.0);
-    //            } else {
-    //                lua_pushnumber(luaState, 0);
-    //            }
+                if (outOfMana) {
+                    lua_pushnumber(luaState, 1.0);
+                } else {
+                    lua_pushnumber(luaState, 0);
+                }
 
-    //            return 2;
-    //        } else {
-    //            lua_error(luaState, "Spell not found");
-    //        }
-    //    } else {
-    //        lua_error(luaState, "Usage: IsSpellUsable(spellName)");
-    //    }
+                return 2;
+            } else {
+                lua_error(luaState, "Spell not found");
+            }
+        } else {
+            lua_error(luaState, "Usage: IsSpellUsable(spellName)");
+        }
 
-    //    return 0;
-    //}
+        return 0;
+    }
 
     //uint32_t Script_GetCurrentCastingInfo(hadesmem::PatchDetourBase *detour, uintptr_t *luaState) {
     //    auto const castingSpellId = reinterpret_cast<uint32_t *>(Offsets::CastingSpellId);
@@ -247,38 +247,38 @@ namespace AndrgitWoWMod {
     //    return 7;
     //}
 
-    //uint32_t Script_GetSpellIdForName(hadesmem::PatchDetourBase *detour, uintptr_t *luaState) {
-    //    if (lua_isstring(luaState, 1)) {
-    //        auto const spellName = lua_tostring(luaState, 1);
-    //        auto const spellId = GetSpellIdFromSpellName(spellName);
-    //        lua_pushnumber(luaState, spellId);
-    //        return 1;
-    //    } else {
-    //        lua_error(luaState, "Usage: GetSpellIdForName(spellName)");
-    //    }
+    uint32_t Script_GetSpellIdForName(hadesmem::PatchDetourBase *detour, uintptr_t *luaState) {
+        if (lua_isstring(luaState, 1)) {
+            auto const spellName = lua_tostring(luaState, 1);
+            auto const spellId = GetSpellIdFromSpellName(spellName);
+            lua_pushnumber(luaState, spellId);
+            return 1;
+        } else {
+            lua_error(luaState, "Usage: GetSpellIdForName(spellName)");
+        }
 
-    //    return 0;
-    //}
+        return 0;
+    }
 
-    //uint32_t Script_GetSpellNameAndRankForId(hadesmem::PatchDetourBase *detour, uintptr_t *luaState) {
-    //    if (lua_isnumber(luaState, 1)) {
-    //        auto const spellId = uint32_t(lua_tonumber(luaState, 1));
-    //        auto const spell = game::GetSpellInfo(spellId);
+    uint32_t Script_GetSpellNameAndRankForId(hadesmem::PatchDetourBase *detour, uintptr_t *luaState) {
+        if (lua_isnumber(luaState, 1)) {
+            auto const spellId = uint32_t(lua_tonumber(luaState, 1));
+            auto const spell = game::GetSpellInfo(spellId);
 
-    //        if (spell) {
-    //            auto const language = *reinterpret_cast<std::uint32_t *>(Offsets::Language);
-    //            lua_pushstring(luaState, (char *) spell->SpellName[language]);
-    //            lua_pushstring(luaState, (char *) spell->Rank[language]);
-    //            return 2;
-    //        } else {
-    //            lua_error(luaState, "Spell not found");
-    //        }
-    //    } else {
-    //        lua_error(luaState, "Usage: GetSpellNameAndRankForId(spellId)");
-    //    }
+            if (spell) {
+                auto const language = *reinterpret_cast<std::uint32_t *>(Offsets::Language);
+                lua_pushstring(luaState, (char *) spell->SpellName[language]);
+                lua_pushstring(luaState, (char *) spell->Rank[language]);
+                return 2;
+            } else {
+                lua_error(luaState, "Spell not found");
+            }
+        } else {
+            lua_error(luaState, "Usage: GetSpellNameAndRankForId(spellId)");
+        }
 
-    //    return 0;
-    //}
+        return 0;
+    }
 
     //uint32_t Script_GetSpellSlotTypeIdForName(hadesmem::PatchDetourBase *detour, uintptr_t *luaState) {
     //    if (lua_isstring(luaState, 1)) {

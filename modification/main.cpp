@@ -100,10 +100,10 @@ namespace AndrgitWoWMod {
     //std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gQueueSpellByNameDetour;
     //std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> qQueueScriptDetour;
     std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gIsSpellInRangeDetour;
-    //std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gIsSpellUsableDetour;
+    std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gIsSpellUsableDetour;
     //std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gGetCurrentCastingInfoDetour;
-    //std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gGetSpellIdForNameDetour;
-    //std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gGetSpellNameAndRankForIdDetour;
+    std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gGetSpellIdForNameDetour;
+    std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gGetSpellNameAndRankForIdDetour;
     //std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gGetSpellSlotAndTypeForNameDetour;
     //std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gChannelStopCastingNextTickDetour;
     //std::unique_ptr<hadesmem::PatchDetour<OnSpriteRightClickT>> gOnSpriteRightClickDetour;
@@ -885,10 +885,10 @@ namespace AndrgitWoWMod {
         //gQueueSpellByNameDetour = createHook<LuaScriptT>(process, Offsets::Script_QueueSpellByName, Script_QueueSpellByName);
         //qQueueScriptDetour = createHook<LuaScriptT>(process, Offsets::Script_QueueScript, Script_QueueScript);
         gIsSpellInRangeDetour = createHook<LuaScriptT>(process, Offsets::Script_IsSpellInRange, Script_IsSpellInRange);
-        //gIsSpellUsableDetour = createHook<LuaScriptT>(process, Offsets::Script_IsSpellUsable, Script_IsSpellUsable);
+        gIsSpellUsableDetour = createHook<LuaScriptT>(process, Offsets::Script_IsSpellUsable, Script_IsSpellUsable);
         //gGetCurrentCastingInfoDetour = createHook<LuaScriptT>(process, Offsets::Script_GetCurrentCastingInfo, Script_GetCurrentCastingInfo);
-        //gGetSpellIdForNameDetour = createHook<LuaScriptT>(process, Offsets::Script_GetSpellIdForName, Script_GetSpellIdForName);
-        //gGetSpellNameAndRankForIdDetour = createHook<LuaScriptT>(process, Offsets::Script_GetSpellNameAndRankForId, Script_GetSpellNameAndRankForId);
+        gGetSpellIdForNameDetour = createHook<LuaScriptT>(process, Offsets::Script_GetSpellIdForName, Script_GetSpellIdForName);
+        gGetSpellNameAndRankForIdDetour = createHook<LuaScriptT>(process, Offsets::Script_GetSpellNameAndRankForId, Script_GetSpellNameAndRankForId);
         //gGetSpellSlotAndTypeForNameDetour = createHook<LuaScriptT>(process, Offsets::Script_GetSpellSlotTypeIdForName, Script_GetSpellSlotTypeIdForName);
         //gOnSpriteRightClickDetour = createHook<OnSpriteRightClickT>(process, Offsets::OnSpriteRightClick, OnSpriteRightClickHook);
         //gChannelStopCastingNextTickDetour = createHook<LuaScriptT>(process, Offsets::Script_ChannelStopCastingNextTick, Script_ChannelStopCastingNextTick);
@@ -933,20 +933,18 @@ namespace AndrgitWoWMod {
         char isSpellInRange[] = "IsSpellInRange";
         RegisterLuaFunction(isSpellInRange, reinterpret_cast<uintptr_t*>(Offsets::Script_IsSpellInRange));
 
-        //char isSpellUsable[] = "IsSpellUsable";
-        //RegisterLuaFunction(isSpellUsable, reinterpret_cast<uintptr_t*>(Offsets::Script_IsSpellUsable));
+        char isSpellUsable[] = "IsSpellUsable";
+        RegisterLuaFunction(isSpellUsable, reinterpret_cast<uintptr_t*>(Offsets::Script_IsSpellUsable));
 
         //char getCurrentCastingInfo[] = "GetCurrentCastingInfo";
         //RegisterLuaFunction(getCurrentCastingInfo,
         //    reinterpret_cast<uintptr_t*>(Offsets::Script_GetCurrentCastingInfo));
 
-        //char getSpellIdForName[] = "GetSpellIdForName";
-        //RegisterLuaFunction(getSpellIdForName,
-        //    reinterpret_cast<uintptr_t*>(Offsets::Script_GetSpellIdForName));
+        char getSpellIdForName[] = "GetSpellIdForName";
+        RegisterLuaFunction(getSpellIdForName, reinterpret_cast<uintptr_t*>(Offsets::Script_GetSpellIdForName));
 
-        //char getSpellNameAndRankForId[] = "GetSpellNameAndRankForId";
-        //RegisterLuaFunction(getSpellNameAndRankForId,
-        //    reinterpret_cast<uintptr_t*>(Offsets::Script_GetSpellNameAndRankForId));
+        char getSpellNameAndRankForId[] = "GetSpellNameAndRankForId";
+        RegisterLuaFunction(getSpellNameAndRankForId, reinterpret_cast<uintptr_t*>(Offsets::Script_GetSpellNameAndRankForId));
 
         //char getSpellSlotTypeIdForName[] = "GetSpellSlotTypeIdForName";
         //RegisterLuaFunction(getSpellSlotTypeIdForName,

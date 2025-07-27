@@ -29,7 +29,7 @@ namespace AndrgitWoWMod {
 
     constexpr uint32_t MAJOR_VERSION = 1;
     constexpr uint32_t MINOR_VERSION = 0;
-    constexpr uint32_t PATCH_VERSION = 1;
+    constexpr uint32_t PATCH_VERSION = 2;
 
     //constexpr int32_t LUA_REGISTRYINDEX = -10000;
     //constexpr int32_t LUA_GLOBALSINDEX = -10001;
@@ -90,7 +90,7 @@ namespace AndrgitWoWMod {
     //using Spell_C_GetCastTimeT = uint32_t(__fastcall*)(uint32_t spellId, uint32_t isPetSpell, int unk);
     //using Spell_C_GetSpellCooldownT = int(__fastcall*)(uint32_t spellId, uint32_t isPetSpell,
     //    uint32_t* duration, uint64_t* startTime, uint32_t* enable);
-    //using Spell_C_IsSpellUsableT = int(__fastcall*)(const game::SpellRec* spellRec, uint32_t* usesManaReturn);
+    using Spell_C_IsSpellUsableT = int(__fastcall*)(const game::SpellRec* spellRec, uint32_t* usesManaReturn);
 
     //using GetSpellSlotAndTypeT = int(__fastcall*)(const char*, uint32_t*);
     //using GetTimeMsT = uint64_t(__stdcall*)();
@@ -114,7 +114,7 @@ namespace AndrgitWoWMod {
     using lua_tostringT = char* (__fastcall*)(uintptr_t*, int);
     using lua_tonumberT = double(__fastcall*)(uintptr_t*, int);
     using lua_pushnumberT = void(__fastcall*)(uintptr_t*, double);
-    //using lua_pushstringT = void(__fastcall*)(uintptr_t*, char*);
+    using lua_pushstringT = void(__fastcall*)(uintptr_t*, char*);
     //using lua_pcallT = int(__fastcall*)(uintptr_t*, int nArgs, int nResults, int errFunction);
     //using lua_pushnilT = void(__fastcall*)(uintptr_t*);
     using lua_errorT = void(__cdecl*)(uintptr_t*, const char*);

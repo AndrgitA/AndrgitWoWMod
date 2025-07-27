@@ -101,7 +101,7 @@ enum class Offsets : std::uint32_t {
     //Spell_C_HandleSpriteClick = 0x006E5B10,
     Spell_C_TargetSpell = 0x006E5250, // [7230032]
     //Spell_C_GetSpellCooldown = 0X006E2EA0,
-    //Spell_C_IsSpellUsable = 0X006E3D60,
+    Spell_C_IsSpellUsable = 0x006E3D60, // [7224672]
 
     CVarLookup = 0x0063DEC0, // [6545088]
     RegisterCVar = 0x0063DB90, // [6544272]
@@ -127,10 +127,10 @@ enum class Offsets : std::uint32_t {
     //Script_CastSpellByNameNoQueue = 0x004B4B64, // [4934500]
     //Script_QueueScript = 0x0048B968, // [4766056] unused address at the end of Script_StopCinematic
     Script_IsSpellInRange = 0x004E76D8, // [5142232]
-    //Script_IsSpellUsable = 0x004E77A4, // [5142436]
+    Script_IsSpellUsable = 0x004E77A4, // [5142436]
     //Script_GetCurrentCastingInfo = 0x004E77F8, // [5142520]
-    //Script_GetSpellIdForName = 0x004E7828, // [5142568]
-    //Script_GetSpellNameAndRankForId = 0x004E7844, // [5142596]
+    Script_GetSpellIdForName = 0x004E7828, // [5142568]
+    Script_GetSpellNameAndRankForId = 0x004E7844, // [5142596]
     //Script_GetSpellSlotTypeIdForName = 0x004E784A, // [5142602]
     //Script_ChannelStopCastingNextTick = 0x004E7858, // [5142616]
     Script_GetAndrgitWoWModVersion = 0x004E7874, // [5142644]
@@ -144,7 +144,7 @@ enum class Offsets : std::uint32_t {
     lua_tonumber = 0x006F3620, // [7288352]
     lua_pushnumber = 0x006F3810, // [7288848]
     //lua_gettable = 0x6F3A40, // [7289408]
-    //lua_pushstring = 0x006F3890, // [7288976]
+    lua_pushstring = 0x006F3890, // [7288976]
     //lua_pushnil = 0x006F37F0, // [7288816]
     //lua_call = 0x00704CD0, // [7359696]
     //lua_pcall = 0x006F41A0, // [7291296]
