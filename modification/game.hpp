@@ -128,6 +128,7 @@ namespace game {
     };
 
     template<typename T>
+    
     struct WowClientDB {
         T **m_recordsById;
         uint32_t m_maxID;
@@ -381,7 +382,6 @@ namespace game {
         SPELL_EFFECT_APPLY_AREA_AURA_OWNER = 133,
         TOTAL_SPELL_EFFECTS = 134
     };
-
 
     enum SpellCastResult : std::uint8_t {
         SPELL_FAILED_AFFECTING_COMBAT = 0,           // 0x0
@@ -672,6 +672,7 @@ namespace game {
         SPELL_CUSTOM_SEND_CHANNEL_VISUAL = 0x800,     // Will periodically send the channeling spell visual kit
         SPELL_CUSTOM_SEPARATE_AURA_PER_CASTER = 0x1000,    // Each caster has his own aura slot, instead of replacing others
     };
+    
     enum SpellTarget {
         TARGET_NONE = 1,
         TARGET_UNIT_CASTER = 2,
@@ -1123,7 +1124,6 @@ namespace game {
         TYPEMASK_CORPSE = 0x80,
     };
 
-
     enum OBJECT_TYPE_ID : __int32 {
         ID_OBJECT = 0x0,
         ID_ITEM = 0x1,
@@ -1177,4 +1177,20 @@ namespace game {
     std::uint64_t GetCurrentTargetGuid();
 
     uintptr_t *ClntObjMgrObjectPtr(TypeMask typeMask, std::uint64_t guid);
+
+    int GetObjectPtrType(uint32_t targetObject);
+
+    typedef struct structC3Vector {
+        float x = 0.0f;
+        float y = 0.0f;
+        float z = 0.0f;
+    } C3Vector;
+
+    C3Vector GetUnitPosition(uint32_t unit);
+
+    // Return -1.0f for error.
+    float GetUnitCombatReach(uint32_t unit);
+
+    // Return -1.0f for error.
+    float GetUnitBoundingRadius(uint32_t unit);
 }
