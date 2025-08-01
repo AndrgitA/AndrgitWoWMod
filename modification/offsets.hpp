@@ -142,6 +142,7 @@ enum class Offsets : std::uint32_t {
     lua_isnumber = 0x006F34D0, // [7288016]
     lua_tostring = 0x006F3690, // [7288464]
     lua_tonumber = 0x006F3620, // [7288352]
+    lua_gettop = 0x006F3070, // [7286896]
     lua_pushnumber = 0x006F3810, // [7288848]
     //lua_gettable = 0x6F3A40, // [7289408]
     lua_pushstring = 0x006F3890, // [7288976]
@@ -170,4 +171,6 @@ enum class Offsets : std::uint32_t {
     //CastEventStringPtr = 0X00BE1A08, // unused event 540 0x21C
     //SpellDamageEventSelfStringPtr = 0X00BE1A2C, // unused event 549 0x225
     //SpellDamageEventOtherStringPtr = 0X00BE1A30, // unused event 550 0x226
+
+    Script_GetDistanceBetween = 0x004e784c
 };

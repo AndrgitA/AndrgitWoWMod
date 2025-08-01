@@ -4,6 +4,7 @@
 
 #include "scripts.hpp"
 #include "offsets.hpp"
+#include "helper.hpp"
 
 namespace AndrgitWoWMod {
     auto const lua_error = reinterpret_cast<lua_errorT>(Offsets::lua_error);
@@ -14,6 +15,7 @@ namespace AndrgitWoWMod {
     auto const lua_tostring = reinterpret_cast<lua_tostringT>(Offsets::lua_tostring);
     auto const lua_tonumber = reinterpret_cast<lua_tonumberT>(Offsets::lua_tonumber);
 
+    auto const lua_gettop = reinterpret_cast<lua_gettopT>(Offsets::lua_gettop);
     auto const lua_pushnumber = reinterpret_cast<lua_pushnumberT>(Offsets::lua_pushnumber);
     auto const lua_pushstring = reinterpret_cast<lua_pushstringT>(Offsets::lua_pushstring);
 
@@ -447,5 +449,33 @@ namespace AndrgitWoWMod {
         lua_pushnumber(luaState, PATCH_VERSION);
 
         return 3;
+    }
+
+    uint32_t Script_GetDistanceBetween(hadesmem::PatchDetourBase* detour, uintptr_t* luaState) {
+        if (lua_gettop(luaState) < 2) {
+            lua_error(luaState, "GetDistanceBetween: Need minimum 2 args");
+            return 0;
+        }
+
+        auto const unit1Name = lua_tostring(luaState, 1);
+        auto const unit2Name = lua_tostring(luaState, 2);
+        DISTANCE_METER meter = DISTANCE_METER::METER_RANGED; // While in-DLL we default to METER_GAUSSIAN, for Lua we default to METER_RANGED
+
+        if (lua_gettop(luaState) >= 3) {
+            auto const meterName = lua_tostring(luaState, 3);
+
+            if (strncmp(meterName, "meleeAutoAttack", 15) == 0) {
+                meter = DISTANCE_METER::METER_MELEE_AUTOATTACK;
+            } else if (strncmp(meterName, "AoE", 3) == 0) {
+                meter = DISTANCE_METER::METER_AOE;
+            } else if (strncmp(meterName, "chains", 6) == 0) {
+                meter = DISTANCE_METER::METER_CHAINS;
+            } else if (strncmp(meterName, "Gaussian", 8) == 0) {
+                meter = DISTANCE_METER::METER_GAUSSIAN;
+            }
+        }
+
+        lua_pushnumber(luaState, GetDistanceBetweenUnits(unit1Name, unit2Name, meter));
+        return 1;
     }
 }

@@ -1177,4 +1177,20 @@ namespace game {
     std::uint64_t GetCurrentTargetGuid();
 
     uintptr_t *ClntObjMgrObjectPtr(TypeMask typeMask, std::uint64_t guid);
+
+    int GetObjectPtrType(uint32_t targetObject);
+
+    typedef struct structC3Vector {
+        float x = 0.0f;
+        float y = 0.0f;
+        float z = 0.0f;
+    } C3Vector;
+
+    C3Vector GetUnitPosition(uint32_t unit);
+
+    // Return -1.0f for error.
+    float GetUnitCombatReach(uint32_t unit);
+
+    // Return -1.0f for error.
+    float GetUnitBoundingRadius(uint32_t unit);
 }

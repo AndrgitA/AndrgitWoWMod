@@ -35,4 +35,6 @@ namespace AndrgitWoWMod {
     uint32_t Script_GetSpellIdForName(hadesmem::PatchDetourBase* detour, uintptr_t* luaState);
 
     uint32_t Script_GetSpellNameAndRankForId(hadesmem::PatchDetourBase* detour, uintptr_t* luaState);
+
+    uint32_t Script_GetDistanceBetween(hadesmem::PatchDetourBase* detour, uintptr_t* luaState);
 }

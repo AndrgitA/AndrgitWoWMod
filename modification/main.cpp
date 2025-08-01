@@ -125,6 +125,8 @@ namespace AndrgitWoWMod {
     //std::unique_ptr<hadesmem::PatchDetour<FastCallPacketHandlerT>> gPeriodicAuraLogHandlerDetour;
     //std::unique_ptr<hadesmem::PatchDetour<FastCallPacketHandlerT>> gSpellNonMeleeDmgLogHandlerDetour;
 
+    std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gGetDistanceBetween;
+
     uint32_t GetTime() {
         return static_cast<uint32_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::high_resolution_clock::now().time_since_epoch()).count()) - gStartTime;
@@ -895,6 +897,7 @@ namespace AndrgitWoWMod {
         gGetAndrgitWoWModVersionDetour = createHook<LuaScriptT>(process, Offsets::Script_GetAndrgitWoWModVersion, Script_GetAndrgitWoWModVersion);
         //gGetItemLevelDetour = createHook<LuaScriptT>(process, Offsets::Script_GetItemLevel, Script_GetItemLevel);
         //gIEndSceneDetour = createHook<ISceneEndT>(process, Offsets::ISceneEndPtr, &ISceneEndHook);
+        gGetDistanceBetween = createHook<LuaScriptT>(process, Offsets::Script_GetDistanceBetween, Script_GetDistanceBetween);
     }
 
     void SpellVisualsInitializeHook(hadesmem::PatchDetourBase* detour) {
@@ -959,6 +962,9 @@ namespace AndrgitWoWMod {
 
         //char getItemILevel[] = "GetItemLevel";
         //RegisterLuaFunction(getItemILevel, reinterpret_cast<uintptr_t*>(Offsets::Script_GetItemLevel));
+
+        char getDistanceBetween[] = "AWM_GetDistanceBetween";
+        RegisterLuaFunction(getDistanceBetween, reinterpret_cast<uintptr_t*>(Offsets::Script_GetDistanceBetween));
     }
 
     std::once_flag loadFlag;

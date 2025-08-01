@@ -107,4 +107,73 @@ namespace game {
     std::uint64_t GetCurrentTargetGuid() {
         return *reinterpret_cast<uint64_t *>(Offsets::LockedTargetGuid);
     }
+
+    int GetObjectPtrType(uint32_t targetObject) {
+        if (targetObject == 0) {
+            return game::OBJECT_TYPE_ID::ID_OBJECT;
+        }
+
+        return *reinterpret_cast<int*>(targetObject + 0x14);
+    }
+
+    // This implementation is from 0x50e9ce
+    // It would lead to float * __thiscall CGUnit_GetPosition_0x5f1f10(void *this,float *returnC3Vector)
+
+    C3Vector GetUnitPosition(uint32_t unit) {
+        C3Vector result = {};
+
+        if (unit == 0 || (unit & 1) != 0) {
+            return result;
+        }
+
+        uint32_t memberFunctions = *reinterpret_cast<uint32_t*>(unit);
+        if (memberFunctions == 0 || (memberFunctions & 1) != 0) {
+            return result;
+        }
+
+        uint32_t getPositionPtr = *reinterpret_cast<uint32_t*>(memberFunctions + 0x14);
+        if (getPositionPtr == 0 || (getPositionPtr & 1) != 0) {
+            return result;
+        }
+
+        typedef C3Vector* (__thiscall* UNIT_GETPOSITION)(uint32_t, C3Vector*);
+        UNIT_GETPOSITION p_getPosition = reinterpret_cast<UNIT_GETPOSITION>(getPositionPtr);
+        p_getPosition(unit, &result);
+
+        return result;
+    }
+
+    float GetUnitCombatReach(uint32_t unit) {
+        if (unit == 0) {
+            return -1.0f;
+        }
+    
+        // Unit descriptor (right after the Object descriptor).
+        // The 0x110 is what I read from the game, but the common knowleadge of object + 0x8 = object descriptor is also fit.
+        // I guess it's a compiler decision to make up this 0x110 magic number.
+        uint32_t attr = *reinterpret_cast<uint32_t*>(unit + 0x110);
+        if (attr == 0 || (attr & 1) != 0) {
+            // we don't have attribute info.
+            return -1.0f;
+        }
+    
+        return *reinterpret_cast<float*>(attr + 0x1f0);
+    }
+
+    float GetUnitBoundingRadius(uint32_t unit) {
+        if (unit == 0) {
+            return -1.0f;
+        }
+
+        // Unit descriptor (right after the Object descriptor).
+        // The 0x110 is what I read from the game, but the common knowleadge of object + 0x8 = object descriptor is also fit.
+        // I guess it's a compiler decision to make up this 0x110 magic number.
+        uint32_t attr = *reinterpret_cast<uint32_t*>(unit + 0x110);
+        if (attr == 0 || (attr & 1) != 0) {
+            // we don't have attribute info.
+            return -1.0f;
+        }
+
+        return *reinterpret_cast<float*>(attr + 0x1ec);
+    }
 }
