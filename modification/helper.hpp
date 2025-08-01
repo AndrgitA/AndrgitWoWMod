@@ -7,27 +7,6 @@
 #include "game.hpp"
 
 namespace AndrgitWoWMod {
-
-    /*bool SpellIsOnGcd(const game::SpellRec *spell);
-
-    bool SpellIsChanneling(const game::SpellRec *spell);
-
-    bool SpellIsTargeting(const game::SpellRec *spell);
-
-    bool SpellIsOnSwing(const game::SpellRec *spell);
-
-    bool SpellIsAttackTradeskillOrEnchant(const game::SpellRec *spell);
-
-    uint32_t GetGcdOrCooldownForSpell(uint32_t spellId);
-
-    uint32_t GetRemainingGcdOrCooldownForSpell(uint32_t spellId);
-
-    uint32_t GetRemainingCooldownForSpell(uint32_t spellId);
-
-    bool IsSpellOnCooldown(uint32_t spellId);
-
-    */
-
     enum DISTANCE_METER {
         METER_AOE,				// AoE spells. Like novas and whirlwind.
         METER_GAUSSIAN,			// Raw distance. Calculations like camera frustum should be using this meter
