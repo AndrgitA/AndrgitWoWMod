@@ -35,6 +35,7 @@
 #include "spellcast.hpp"
 #include "scripts.hpp"
 #include "helper.hpp"
+#include "nameplate.hpp"
 
 #include <cstdint>
 #include <memory>
@@ -46,7 +47,7 @@
 #include <sstream>
 
 
-BOOL WINAPI DllMain(HINSTANCE, uint32_t, void *);
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
 
 namespace AndrgitWoWMod {
     UserSettings gUserSettings;
@@ -64,6 +65,10 @@ namespace AndrgitWoWMod {
 
     std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gGetAndrgitWoWModVersionDetour;
     std::unique_ptr<hadesmem::PatchDetour<LuaScriptT>> gGetDistanceBetween;
+    
+    bool IsValidPtr(std::uint32_t ptr) {
+        return (ptr >= 0x1000 && ptr < 0xFFF00000);
+    }
 
     uint32_t GetTime() {
         return static_cast<uint32_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -189,15 +194,8 @@ namespace AndrgitWoWMod {
         // update from cvars
         loadUserVar("AWM_QuickcastTargetingSpells");
         loadUserVar("AWM_NameplateDistance");
-    }
 
-    // Template function to simplify hook initialization with specific storage
-    template<typename FuncT, typename HookT>
-    std::unique_ptr<hadesmem::PatchDetour<FuncT>> createHook(const hadesmem::Process& process, Offsets offset, HookT hookFunc) {
-        auto const originalFunc = hadesmem::detail::AliasCast<FuncT>(offset);
-        auto detour = std::make_unique<hadesmem::PatchDetour<FuncT>>(process, originalFunc, hookFunc);
-        detour->Apply();
-        return detour;
+        nameplateLoad();
     }
 
     void initHooks() {
@@ -211,6 +209,8 @@ namespace AndrgitWoWMod {
         gGetSpellNameAndRankForIdDetour = createHook<LuaScriptT>(process, Offsets::Script_GetSpellNameAndRankForId, Script_GetSpellNameAndRankForId);
         gGetAndrgitWoWModVersionDetour = createHook<LuaScriptT>(process, Offsets::Script_GetAndrgitWoWModVersion, Script_GetAndrgitWoWModVersion);
         gGetDistanceBetween = createHook<LuaScriptT>(process, Offsets::Script_GetDistanceBetween, Script_GetDistanceBetween);
+
+        nameplateInitHooks(process);
     }
 
     void SpellVisualsInitializeHook(hadesmem::PatchDetourBase* detour) {
@@ -251,7 +251,7 @@ namespace AndrgitWoWMod {
     void load() {
         std::call_once(loadFlag, []() {
             const hadesmem::Process process(::GetCurrentProcessId());
-
+            
             // hook spell visuals initialize
             auto const spellVisualsInitOrig = hadesmem::detail::AliasCast<SpellVisualsInitializeT>(
                 Offsets::SpellVisualsInitialize);
@@ -268,9 +268,26 @@ namespace AndrgitWoWMod {
             gLoadScriptFunctionsDetour->Apply();
         });
     }
+
+    void unload() {
+        nameplateUnload();
+
+        // Close debug
+        if (AndrgitWoWMod::debugLogFile.is_open()) {
+            AndrgitWoWMod::debugLogFile.close();
+        }
+    }
 }
 
-extern "C" __declspec(dllexport) uint32_t Load() {
-    AndrgitWoWMod::load();
-    return EXIT_SUCCESS;
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
+    switch (fdwReason) {
+    case DLL_PROCESS_ATTACH:
+        AndrgitWoWMod::load();
+        break;
+
+    case DLL_PROCESS_DETACH:
+        AndrgitWoWMod::unload();
+        break;
+    }
+    return TRUE;
 }

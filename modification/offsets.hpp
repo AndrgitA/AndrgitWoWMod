@@ -90,5 +90,19 @@ enum class Offsets : std::uint32_t {
 
     SpellVisualsInitialize = 0x006ec0e0, // [7258336]
 
-    Script_GetDistanceBetween = 0x004e784c // [5142604]
+    Script_GetDistanceBetween = 0x004e784c, // [5142604]
+
+    //testing functional
+    Nameplate_Constructor = 0x007CB250, // 8172112
+    Nameplate_ManagerUpdate = 0x006086E0, // 6325984
+    Nameplate_Bind = 0x007CB6D0, // 8173264
+    Nameplate_Prepare = 0x0060F600, // 6354432
+
+    // --- Системные адреса (Функции) ---
+    CSimpleFrame_Hide = 0x0076AD50, // vtable +132
+    CSimpleFrame_Show = 0x0076AE10, // vtable +136
+
+    // --- Таблицы функций (VTable) ---
+    Nameplate_VTable1 = 0x0081DE50,  // +0x0
+    Nameplate_VTable2 = 0x0081DE24  // +0x24
 };

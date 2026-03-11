@@ -19,6 +19,7 @@
 #include <fstream>
 
 #include "game.hpp"
+#include "offsets.hpp"
 #include "types.h"
 
 namespace AndrgitWoWMod {
@@ -57,13 +58,23 @@ namespace AndrgitWoWMod {
     using GetSpellSlotAndBookTypeFromSpellNameT = uint32_t(__fastcall*)(const char*, uint32_t*);
 
     using SpellVisualsInitializeT = void(__stdcall*)(void);
-
     using CVarLookupT = uintptr_t * (__fastcall*)(const char*);
     using SetCVarT = int(__fastcall*)(uintptr_t* luaPtr);
     using CVarRegisterT = int* (__fastcall*)(char* name, char* help, int unk1, const char* defaultValuePtr,
         void* callbackPtr,
         int category, char unk2, int unk3);
 
+    // Template function to simplify hook initialization with specific storage
+    template<typename FuncT, typename HookT>
+    inline std::unique_ptr<hadesmem::PatchDetour<FuncT>> createHook(const hadesmem::Process& process, Offsets offset, HookT hookFunc) {
+        auto const originalFunc = hadesmem::detail::AliasCast<FuncT>(offset);
+        auto detour = std::make_unique<hadesmem::PatchDetour<FuncT>>(process, originalFunc, hookFunc);
+        detour->Apply();
+        return detour;
+    }
+    
+    bool IsValidPtr(std::uint32_t ptr);
+    
     uint32_t GetTime();
 
     std::string GetHumanReadableTime();

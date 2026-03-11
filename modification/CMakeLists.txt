@@ -17,6 +17,11 @@ set(SOURCE_FILES
     spellcast.cpp
     scripts.hpp
     scripts.cpp
+
+    nameplate.hpp
+    nameplate.cpp
+    CSimpleFrame.hpp
+    CSimpleFrame.cpp
 )
 
         
